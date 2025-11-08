@@ -10,6 +10,7 @@ import ServicesPage from "./servicepage/ServicesPage ";
 import About from "./pages/About";
 import Bootcamp from "./pages/Bootcamp";
 import Contact from "./pages/Contact";
+import BlogDetails from "./resourcepage/BlogDetails";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/about" element={<About/>} />
           <Route path="/bootcamp" element={<Bootcamp/>} />
           <Route path="/contact" element={<Contact/>} />
+           <Route path="/blog/:id" element={<BlogDetails />} />
         </Routes>
         <Footer />
       </div>

@@ -1,0 +1,26 @@
+.tiptap-editor {
+  min-height: 200px;
+  padding: 12px;
+  outline: none;
+}
+
+.tiptap-editor p {
+  margin: 0 0 0.5rem 0;
+}
+
+.tiptap-editor h1,
+.tiptap-editor h2,
+.tiptap-editor h3 {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.tiptap-editor ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+
+.tiptap-editor ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+}

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function GrowthSection() {
   return (
-    <section className="bg-[#1E4D8E] text-white text-center py-20 sm:py-24 px-4 sm:px-6 mt-10 sm:mt-16 md:mt-20">
+    <section className="bg-[#1E4D8E] text-white text-center py-20 sm:py-24 px-4 sm:px-6 mt-0 sm:mt-0 md:mt-0">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">

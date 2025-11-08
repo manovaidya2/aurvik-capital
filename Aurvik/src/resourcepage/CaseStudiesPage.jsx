@@ -1,44 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../utils/axiosInstance";
 
 const CaseStudiesPage = () => {
+  const [caseStudies, setCaseStudies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
 
-  const caseStudies = [
-    {
-      id: 1,
-      icon: "📖",
-      title: "₹2.4 Cr Annual Savings: Manufacturing MSME Success Story",
-      subtitle: "Industrial Equipment Manufacturer",
-      challenge: "High tax burden limiting reinvestment capacity",
-      solution: "UAE Free Zone structure with optimized transfer pricing",
-      result: "Saved ₹2.4 Cr annually, expanded to 3 new markets",
-      downloadLink: "#",
-    },
-    {
-      id: 2,
-      icon: "📖",
-      title: "From Local to Global: IT Services Firm Transformation",
-      subtitle: "Software Development Company",
-      challenge: "Limited global presence and high GST impact",
-      solution: "UAE mainland company with India subsidiary model",
-      result: "₹1.8 Cr tax savings, 5x revenue growth in 2 years",
-      downloadLink: "#",
-    },
-    {
-      id: 3,
-      icon: "📖",
-      title: "Export Business Optimization Through UAE Structure",
-      subtitle: "Textile Export Business",
-      challenge: "GST and customs challenges affecting margins",
-      solution: "Offshore UAE entity for international trade",
-      result: "₹3.2 Cr savings, simplified compliance, 0% GST",
-      downloadLink: "#",
-    },
-  ];
+  // ✅ Fetch case studies from backend
+  useEffect(() => {
+    const fetchCaseStudies = async () => {
+      try {
+        console.log("📖 Fetching case studies from backend...");
+        const response = await axiosInstance.get("/casestudies");
+        setCaseStudies(response.data);
+        console.log("✅ Case studies loaded:", response.data.length);
+      } catch (error) {
+        console.error("❌ Error fetching case studies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCaseStudies();
+  }, []);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    // Handle subscription logic here
     console.log("Subscribing email:", email);
     setEmail("");
   };
@@ -58,18 +44,24 @@ const CaseStudiesPage = () => {
         </div>
       </div>
 
-      {/* Case Studies Grid */}
+      {/* Case Studies */}
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="space-y-6">
-            {caseStudies.map((study) => (
-              <CaseStudyCard key={study.id} study={study} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="text-center text-gray-600">Loading case studies...</p>
+          ) : caseStudies.length === 0 ? (
+            <p className="text-center text-gray-600">No case studies found.</p>
+          ) : (
+            <div className="space-y-6">
+              {caseStudies.map((study) => (
+                <CaseStudyCard key={study._id} study={study} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Newsletter Subscription Section */}
+      {/* Newsletter Section */}
       <div className="w-full bg-gray-100 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -80,7 +72,6 @@ const CaseStudiesPage = () => {
             expansion strategies
           </p>
 
-          {/* Email Subscription Form */}
           <form
             onSubmit={handleSubscribe}
             className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-4"
@@ -101,7 +92,6 @@ const CaseStudiesPage = () => {
             </button>
           </form>
 
-          {/* Social Proof */}
           <p className="text-sm text-gray-500">
             Join 10,000+ entrepreneurs receiving our newsletter
           </p>
@@ -111,19 +101,22 @@ const CaseStudiesPage = () => {
   );
 };
 
+// 🧱 Card Component (same design)
 const CaseStudyCard = ({ study }) => {
   const handleDownload = () => {
-    // Add your download logic here
-    console.log("Downloading case study:", study.title);
+    if (study.pdfFile) {
+      window.open(study.pdfFile, "_blank");
+    } else {
+      console.log("No PDF available for:", study.title);
+    }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
       <div className="p-6 md:p-8">
-        {/* Header with Icon and Title */}
         <div className="flex items-start gap-4 mb-6">
           <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
-            {study.icon}
+            📖
           </div>
           <div className="flex-1">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
@@ -133,9 +126,7 @@ const CaseStudyCard = ({ study }) => {
           </div>
         </div>
 
-        {/* Three Column Layout: Challenge, Solution, Result */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {/* Challenge Column */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2">
               Challenge
@@ -144,8 +135,6 @@ const CaseStudyCard = ({ study }) => {
               {study.challenge}
             </p>
           </div>
-
-          {/* Solution Column */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2">
               Solution
@@ -154,8 +143,6 @@ const CaseStudyCard = ({ study }) => {
               {study.solution}
             </p>
           </div>
-
-          {/* Result Column */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2">
               Result
@@ -166,26 +153,27 @@ const CaseStudyCard = ({ study }) => {
           </div>
         </div>
 
-        {/* Download Button */}
-        <button
-          onClick={handleDownload}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-        >
-          <svg
-            className="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        {study.pdfFile && (
+          <button
+            onClick={handleDownload}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-            />
-          </svg>
-          Download Full Case Study
-        </button>
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Download Full Case Study
+          </button>
+        )}
       </div>
     </div>
   );

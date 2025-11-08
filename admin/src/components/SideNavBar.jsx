@@ -31,6 +31,38 @@ const SideNavBar = ({ activeTab, setActiveTab }) => {
     setActiveTab(tab);
     navigate(route);
   };
+  const ContactIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M21 10a8.38 8.38 0 01-.9 3.8l-1.35 2.7a2 2 0 01-1.78 1.1H7.03a2 2 0 01-1.78-1.1l-1.35-2.7A8.38 8.38 0 013 10a8.38 8.38 0 01.9-3.8L5.25 3.5A2 2 0 017.03 2h9.94a2 2 0 011.78 1.5l1.35 2.7A8.38 8.38 0 0121 10zM8 10h.01M16 10h.01"
+    />
+  </svg>
+);
+const BootcampIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 3l9 4.5v9L12 21l-9-4.5v-9L12 3z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 12l3 3 3-3"
+    />
+  </svg>
+);
+
 
   return (
     <aside
@@ -158,6 +190,21 @@ const SideNavBar = ({ activeTab, setActiveTab }) => {
           collapsed={!sidebarOpen}
         />
         <NavItem
+  icon={<ContactIcon />}
+  label="Contact"
+  active={activeTab === "contact"}
+  onClick={() => handleNavigation("contact", "/admin/contact")}
+  collapsed={!sidebarOpen}
+/>
+<NavItem
+  icon={<BootcampIcon />}
+  label="Bootcamp"
+  active={activeTab === "bootcamp"}
+  onClick={() => handleNavigation("bootcamp", "/admin/bootcamp")}
+  collapsed={!sidebarOpen}
+/>
+
+        <NavItem
           icon={<SettingsIcon />}
           label="Settings"
           active={activeTab === "settings"}
@@ -165,6 +212,7 @@ const SideNavBar = ({ activeTab, setActiveTab }) => {
           collapsed={!sidebarOpen}
         />
       </nav>
+      
 
       {/* User Section */}
       <div className="p-4 border-t border-blue-800">

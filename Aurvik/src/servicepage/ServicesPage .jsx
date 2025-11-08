@@ -1,16 +1,41 @@
 import React, { useState } from "react";
 
 const ServicesPage = () => {
+  // ✅ All hooks inside component
   const [calculatorData, setCalculatorData] = useState({
     turnover: "10",
     taxRate: "30",
+    uaeTaxRate: "9",
   });
 
-  const calculateSavings = () => {
+  const [showDetails, setShowDetails] = useState(false);
+
+  // ✅ Utility functions
+  const formatNumber = (num) => {
+    if (isNaN(num)) return "0.00";
+    return num.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const currentTax = () => {
     const turnover = parseFloat(calculatorData.turnover) || 0;
     const taxRate = parseFloat(calculatorData.taxRate) || 0;
-    const savings = (turnover * taxRate) / 100;
-    return savings.toFixed(2);
+    return (turnover * taxRate) / 100;
+  };
+
+  const uaeTax = () => {
+    const turnover = parseFloat(calculatorData.turnover) || 0;
+    const taxRate = parseFloat(calculatorData.uaeTaxRate || 9);
+    return (turnover * taxRate) / 100;
+  };
+
+  const savingsAmount = () => currentTax() - uaeTax();
+
+  const calculateSavings = () => {
+    const saved = savingsAmount();
+    return saved > 0 ? saved.toFixed(2) : "0.00";
   };
 
   const handleCalculatorChange = (e) => {
@@ -81,113 +106,158 @@ const ServicesPage = () => {
       </div>
 
       {/* Tax Savings Calculator Section */}
-      <div className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Left Column - Calculator */}
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                Tax Savings Calculator
-              </h2>
+     {/* Tax Savings Calculator Section */}
+<div className="py-16 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      {/* Left Column - Calculator */}
+      <div className="bg-white rounded-lg shadow-sm p-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+          Tax Savings Calculator
+        </h2>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Annual Turnover (₹ Crores)
-                  </label>
-                  <input
-                    type="number"
-                    name="turnover"
-                    value={calculatorData.turnover}
-                    onChange={handleCalculatorChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    Current Tax Rate (%)
-                  </label>
-                  <input
-                    type="number"
-                    name="taxRate"
-                    value={calculatorData.taxRate}
-                    onChange={handleCalculatorChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
-                  />
-                </div>
-
-                <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                  <p className="text-sm text-gray-600 mb-2">
-                    Estimated Annual Savings
-                  </p>
-                  <p className="text-4xl font-bold text-yellow-600">
-                    ₹ {calculateSavings()} Cr+
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    With optimized UAE structure
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Financial Planning */}
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-6 h-6 text-blue-900"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm0 2v16h10V4H7zm2 2h6v2H9V6zm0 4h6v2H9v-2zm0 4h4v2H9v-2z"/>
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                    Financial Planning & Taxation
-                  </h2>
-                </div>
-              </div>
-
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Our tax optimization strategies are 100% legal and compliant
-                with international tax laws. We help you restructure your
-                business to minimize tax leakage while maintaining full
-                regulatory compliance.
-              </p>
-
-              <div className="space-y-3">
-                {[
-                  "Tax Leakage Analysis",
-                  "Corporate Tax Planning (0-9%)",
-                  "Cross-Border Tax Optimization",
-                  "GST & Indirect Tax Savings",
-                  "Transfer Pricing Strategy",
-                  "Compliance & Audit Support",
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start">
-                    <svg
-                      className="w-5 h-5 text-yellow-500 mr-3 mt-0.5 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span className="text-gray-700">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
+              Annual Turnover (₹ Crores)
+            </label>
+            <input
+              type="number"
+              name="turnover"
+              value={calculatorData.turnover}
+              onChange={handleCalculatorChange}
+              placeholder="Enter turnover in ₹ Cr"
+              min="0"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+            />
           </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
+              Current Tax Rate (%)
+            </label>
+            <input
+              type="number"
+              name="taxRate"
+              value={calculatorData.taxRate}
+              onChange={handleCalculatorChange}
+              placeholder="Enter current tax rate"
+              min="0"
+              max="100"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
+              UAE Tax Rate (%)
+            </label>
+            <input
+              type="number"
+              name="uaeTaxRate"
+              value={calculatorData.uaeTaxRate || "9"}
+              onChange={handleCalculatorChange}
+              placeholder="Usually 0–9%"
+              min="0"
+              max="100"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+            />
+          </div>
+
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="text-blue-900 font-medium underline text-sm"
+          >
+            {showDetails ? "Hide Detailed Breakdown" : "View Detailed Breakdown"}
+          </button>
+
+          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+            <p className="text-sm text-gray-600 mb-2">
+              Estimated Annual Tax Savings
+            </p>
+            <p className="text-4xl font-bold text-yellow-600">
+              ₹ {calculateSavings()} Cr+
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Based on UAE tax optimization structure
+            </p>
+          </div>
+
+          {showDetails && (
+            <div className="mt-6 space-y-3 text-sm text-gray-700 bg-gray-50 p-4 rounded-md border border-gray-200">
+              <p>
+                💼 <b>Current Tax Payable:</b> ₹{" "}
+                {formatNumber(currentTax())} Cr
+              </p>
+              <p>
+                🇦🇪 <b>UAE Tax Payable:</b> ₹{" "}
+                {formatNumber(uaeTax())} Cr
+              </p>
+              <p>
+                💰 <b>Tax Saved:</b> ₹ {formatNumber(savingsAmount())} Cr
+              </p>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Right Column - Financial Planning */}
+      <div className="bg-white rounded-lg shadow-sm p-8">
+        <div className="flex items-start gap-4 mb-6">
+          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg
+              className="w-6 h-6 text-blue-900"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm0 2v16h10V4H7zm2 2h6v2H9V6zm0 4h6v2H9v-2zm0 4h4v2H9v-2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Financial Planning & Taxation
+            </h2>
+          </div>
+        </div>
+
+        <p className="text-gray-600 mb-6 leading-relaxed">
+          Our tax optimization strategies are 100% legal and compliant with
+          international tax laws. We help you restructure your business to
+          minimize tax leakage while maintaining full regulatory compliance.
+        </p>
+
+        <div className="space-y-3">
+          {[
+            "Tax Leakage Analysis",
+            "Corporate Tax Planning (0-9%)",
+            "Cross-Border Tax Optimization",
+            "GST & Indirect Tax Savings",
+            "Transfer Pricing Strategy",
+            "Compliance & Audit Support",
+          ].map((item, index) => (
+            <div key={index} className="flex items-start">
+              <svg
+                className="w-5 h-5 text-yellow-500 mr-3 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span className="text-gray-700">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       {/* UAE Business Establishment Section */}
       <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-100">
